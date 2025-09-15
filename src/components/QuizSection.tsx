@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -18,6 +18,27 @@ import QuizResults from "@/components/QuizResults";
 const QuizSection = () => {
   const [showQuiz, setShowQuiz] = useState(false);
   const { currentQuestion, state, answerQuestion, getResults, resetQuiz, saveProgress } = useQuiz();
+
+  // Auto-start quiz when triggered via URL (e.g., #quiz-start or ?startQuiz=1)
+  useEffect(() => {
+    const startIfNeeded = () => {
+      try {
+        const url = new URL(window.location.href);
+        if (url.hash === '#quiz-start' || url.searchParams.get('startQuiz') === '1') {
+          setShowQuiz(true);
+          // Ensure section is in view
+          document.getElementById('quiz')?.scrollIntoView({ behavior: 'smooth' });
+        }
+      } catch (_) {
+        // no-op
+      }
+    };
+
+    startIfNeeded();
+    const onHashChange = () => startIfNeeded();
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
 
   const benefits = [
     { icon: Brain, text: "AI-powered personalized career recommendations" },

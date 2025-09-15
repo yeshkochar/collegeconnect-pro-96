@@ -93,7 +93,19 @@ const Features = () => {
                     </li>
                   ))}
                 </ul>
-                <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                <Button 
+                  variant="outline" 
+                  className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                  onClick={() => {
+                    const isQuizFeature = feature.title === "Aptitude & Interest Quiz" || feature.title === "Course-to-Career Mapping";
+                    if (isQuizFeature) {
+                      window.history.pushState(null, "", "#quiz-start");
+                      document.getElementById("quiz")?.scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      window.location.hash = "#colleges";
+                    }
+                  }}
+                >
                   Learn More
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
