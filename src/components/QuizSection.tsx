@@ -12,56 +12,39 @@ import {
   ArrowRight,
   Play
 } from "lucide-react";
+import { useQuiz } from "@/hooks/useQuiz";
+import QuizResults from "@/components/QuizResults";
 
 const QuizSection = () => {
-  const [currentStep, setCurrentStep] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
-
-  const quizSteps = [
-    {
-      title: "Personal Interests",
-      description: "Tell us what subjects and activities you enjoy most",
-      questions: 5,
-      time: "3 mins"
-    },
-    {
-      title: "Skills Assessment",
-      description: "Evaluate your current strengths and abilities",
-      questions: 8,
-      time: "5 mins"
-    },
-    {
-      title: "Career Preferences",
-      description: "Understand your ideal work environment and goals",
-      questions: 6,
-      time: "4 mins"
-    },
-    {
-      title: "Learning Style",
-      description: "Discover how you learn and process information best",
-      questions: 4,
-      time: "2 mins"
-    }
-  ];
-
-  const sampleQuestion = {
-    question: "Which of these activities do you find most engaging?",
-    options: [
-      "Solving mathematical problems and puzzles",
-      "Writing stories or articles",
-      "Conducting science experiments",
-      "Creating art or design projects"
-    ]
-  };
+  const { currentQuestion, state, answerQuestion, getResults, resetQuiz, saveProgress } = useQuiz();
 
   const benefits = [
-    { icon: Brain, text: "Personalized career recommendations" },
-    { icon: Award, text: "Detailed strength analysis" },
-    { icon: Users, text: "Compare with peer data" },
-    { icon: CheckCircle, text: "Actionable next steps" }
+    { icon: Brain, text: "AI-powered personalized career recommendations" },
+    { icon: Award, text: "Detailed strength & aptitude analysis" },
+    { icon: Users, text: "Compare with J&K student peer data" },
+    { icon: CheckCircle, text: "Actionable next steps & college guidance" }
   ];
 
-  if (showQuiz) {
+  // Show results if quiz is complete
+  if (showQuiz && state.isComplete) {
+    return (
+      <section id="quiz" className="py-20 bg-gradient-to-br from-accent-light to-secondary/30">
+        <div className="container max-w-4xl">
+          <QuizResults 
+            results={getResults()} 
+            onRestart={() => {
+              resetQuiz();
+              setShowQuiz(false);
+            }} 
+          />
+        </div>
+      </section>
+    );
+  }
+
+  // Show quiz interface
+  if (showQuiz && currentQuestion) {
     return (
       <section id="quiz" className="py-20 bg-gradient-to-br from-accent-light to-secondary/30">
         <div className="container max-w-4xl">
@@ -69,41 +52,35 @@ const QuizSection = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <Badge variant="secondary" className="mb-2">
-                  Step {currentStep + 1} of {quizSteps.length}
+                  Question {state.answers.length + 1} of 8 (Adaptive)
                 </Badge>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Clock className="h-4 w-4 mr-1" />
-                  {quizSteps[currentStep].time}
+                  Est. 2 mins remaining
                 </div>
               </div>
-              <CardTitle className="text-2xl">{quizSteps[currentStep].title}</CardTitle>
+              <CardTitle className="text-2xl">{currentQuestion.category.charAt(0).toUpperCase() + currentQuestion.category.slice(1)} Assessment</CardTitle>
               <CardDescription className="text-base">
-                {quizSteps[currentStep].description}
+                Answer honestly - there are no right or wrong answers
               </CardDescription>
-              <Progress value={(currentStep + 1) * 25} className="mt-4" />
+              <Progress value={state.progress} className="mt-4" />
             </CardHeader>
             
             <CardContent className="space-y-6">
               <div className="space-y-4">
-                <h3 className="text-lg font-medium">{sampleQuestion.question}</h3>
+                <h3 className="text-lg font-medium">{currentQuestion.question}</h3>
                 <div className="space-y-3">
-                  {sampleQuestion.options.map((option, index) => (
+                  {currentQuestion.options.map((option, index) => (
                     <Button
                       key={index}
                       variant="outline"
                       className="w-full justify-start text-left h-auto py-4 px-6 hover:bg-primary hover:text-primary-foreground"
                       onClick={() => {
-                        if (currentStep < quizSteps.length - 1) {
-                          setCurrentStep(currentStep + 1);
-                        } else {
-                          // Quiz completed
-                          setShowQuiz(false);
-                          setCurrentStep(0);
-                        }
+                        answerQuestion(currentQuestion.id, option.value);
                       }}
                     >
                       <span className="mr-3 font-medium">{String.fromCharCode(65 + index)}.</span>
-                      {option}
+                      {option.text}
                     </Button>
                   ))}
                 </div>
@@ -112,14 +89,16 @@ const QuizSection = () => {
               <div className="flex justify-between pt-6">
                 <Button 
                   variant="ghost" 
-                  onClick={() => currentStep > 0 && setCurrentStep(currentStep - 1)}
-                  disabled={currentStep === 0}
+                  onClick={() => {
+                    saveProgress();
+                    setShowQuiz(false);
+                  }}
                 >
-                  Previous
-                </Button>
-                <Button variant="outline" onClick={() => setShowQuiz(false)}>
                   Save & Continue Later
                 </Button>
+                <div className="text-sm text-muted-foreground">
+                  {state.answers.length} answers recorded
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -171,28 +150,56 @@ const QuizSection = () => {
             </Button>
           </div>
 
-          {/* Quiz Preview */}
+          {/* Smart Assessment Preview */}
           <div className="space-y-4">
-            {quizSteps.map((step, index) => (
-              <Card key={index} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1 space-y-2">
-                      <h3 className="font-semibold">{step.title}</h3>
-                      <p className="text-sm text-muted-foreground">{step.description}</p>
-                      <div className="flex items-center space-x-4 text-xs text-muted-foreground">
-                        <span>{step.questions} questions</span>
-                        <span>•</span>
-                        <span>{step.time}</span>
-                      </div>
-                    </div>
+            <Card className="hover:shadow-md transition-shadow border-primary/20">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
+                    <Brain className="h-4 w-4" />
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                  <div className="flex-1 space-y-2">
+                    <h3 className="font-semibold">Adaptive Intelligence</h3>
+                    <p className="text-sm text-muted-foreground">Questions adapt based on your previous answers for more accurate results</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover:shadow-md transition-shadow border-success/20">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-sm font-medium text-success">
+                    <Award className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <h3 className="font-semibold">J&K Focused Recommendations</h3>
+                    <p className="text-sm text-muted-foreground">Get personalized career paths with specific opportunities in Jammu & Kashmir</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover:shadow-md transition-shadow border-accent/20">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-sm font-medium text-accent">
+                    <Users className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <h3 className="font-semibold">Progress Tracking</h3>
+                    <p className="text-sm text-muted-foreground">Save your progress and get detailed analysis with actionable steps</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <div className="p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-primary/10">
+              <div className="flex items-center justify-center text-sm text-muted-foreground">
+                <Clock className="h-4 w-4 mr-2" />
+                Takes 5-8 minutes • Completely Free
+              </div>
+            </div>
           </div>
         </div>
       </div>
