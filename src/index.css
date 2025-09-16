@@ -2,66 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Educational Platform Design System - Career & Education Advisor */
+/* Government of India Tri-Color Design System - Career & Education Portal */
 
 @layer base {
   :root {
-    /* Base Colors */
+    /* Base Colors - Clean White Base */
     --background: 0 0% 100%;
-    --foreground: 222 84% 4.9%;
+    --foreground: 0 0% 13%;
 
     /* Card System */
     --card: 0 0% 100%;
-    --card-foreground: 222 84% 4.9%;
+    --card-foreground: 0 0% 13%;
 
     /* Popover System */
     --popover: 0 0% 100%;
-    --popover-foreground: 222 84% 4.9%;
+    --popover-foreground: 0 0% 13%;
 
-    /* Primary - Professional Blue for Education */
-    --primary: 217 91% 60%;
+    /* Primary - Saffron (Top band of Indian Flag) */
+    --primary: 24 100% 60%;
     --primary-foreground: 0 0% 98%;
-    --primary-hover: 217 91% 55%;
+    --primary-hover: 24 100% 55%;
 
-    /* Secondary - Light Blue for Supporting Elements */
-    --secondary: 214 95% 93%;
-    --secondary-foreground: 217 91% 60%;
+    /* Secondary - Light Saffron for Supporting Elements */
+    --secondary: 24 60% 95%;
+    --secondary-foreground: 24 100% 35%;
 
-    /* Success - Green for Achievements & Positive Actions */
-    --success: 142 76% 36%;
+    /* Success - Green (Bottom band of Indian Flag) */
+    --success: 120 100% 25%;
     --success-foreground: 0 0% 98%;
-    --success-light: 142 52% 96%;
+    --success-light: 120 60% 95%;
 
-    /* Warning - Orange for Important Information */
-    --warning: 38 92% 50%;
+    /* Warning - Enhanced Saffron for Important Information */
+    --warning: 24 100% 50%;
     --warning-foreground: 0 0% 98%;
-    --warning-light: 48 100% 96%;
+    --warning-light: 24 60% 96%;
 
-    /* Muted - For Less Important Content */
-    --muted: 210 40% 96%;
+    /* Muted - Soft Gray for Less Important Content */
+    --muted: 210 20% 96%;
     --muted-foreground: 215 16% 47%;
 
-    /* Accent - For Highlights and CTAs */
-    --accent: 261 83% 58%;
+    /* Accent - Deep Green for Highlights and CTAs */
+    --accent: 120 100% 20%;
     --accent-foreground: 0 0% 98%;
-    --accent-light: 261 100% 98%;
+    --accent-light: 120 60% 98%;
 
     /* Destructive - For Errors */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
     /* Borders & Inputs */
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 217 91% 60%;
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 24 100% 60%;
 
     /* Radius System */
     --radius: 0.75rem;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(261 83% 58%));
-    --gradient-secondary: linear-gradient(135deg, hsl(214 95% 93%), hsl(210 40% 96%));
-    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 52% 96%));
+    /* Tri-Color Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(24 100% 60%), hsl(120 100% 25%));
+    --gradient-secondary: linear-gradient(135deg, hsl(24 60% 95%), hsl(210 20% 96%));
+    --gradient-success: linear-gradient(135deg, hsl(120 100% 25%), hsl(120 60% 95%));
+    --gradient-tricolor: linear-gradient(180deg, hsl(24 100% 60%) 0%, hsl(0 0% 100%) 33%, hsl(0 0% 100%) 66%, hsl(120 100% 25%) 100%);
 
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);

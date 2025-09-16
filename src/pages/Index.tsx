@@ -4,6 +4,7 @@ import Features from "@/components/Features";
 import QuizSection from "@/components/QuizSection";
 import CollegeDirectory from "@/components/CollegeDirectory";
 import Footer from "@/components/Footer";
+import ChatBot from "@/components/ChatBot";
 
 const Index = () => {
   return (
@@ -16,6 +17,7 @@ const Index = () => {
         <CollegeDirectory />
       </main>
       <Footer />
+      <ChatBot />
     </div>
   );
 };
